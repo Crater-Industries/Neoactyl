@@ -59,7 +59,7 @@ Lunix Dash is in early development. Some features are incomplete or not yet avai
 
 - [x] Basic authentication (login/register)
 
-- [x] 0Auth login(discord/google)
+- [ ] 0Auth login(discord/google)
 
 - [ ] Server creation & management
 
