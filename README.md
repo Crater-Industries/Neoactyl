@@ -53,13 +53,13 @@ Panel Integration: Pterodactyl API
 
 ## 🏗️ Development Status
 
-Lunix Dash is in early development. Some features are incomplete or not yet available. Stay updated by following our progress!
+Neoactyl is in early development. Some features are incomplete or not yet available. Stay updated by following our progress!
 
 ## 📌 Roadmap
 
 - [x] Basic authentication (login/register)
 
-- [ ] 0Auth login(discord/google)
+- [x] 0Auth login(discord/google)
 
 - [ ] Server creation & management
 
@@ -78,7 +78,7 @@ Installation guides will be provided once the project reaches a stable version.
 
 ## 🎯 Contributing
 
-We welcome contributions! Feel free to open issues or submit pull requests to help improve Lunix Dash.
+We welcome contributions! Feel free to open issues or submit pull requests to help improve Neoactyl.
 
 ## 📜 License
 
