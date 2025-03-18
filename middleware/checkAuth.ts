@@ -14,7 +14,7 @@ const checkAuth = async (req, res, next) => {
 
     // Verify token
     const decoded = jwt.verify(token, jwtSecret);
-    const user = await axios.post(
+    const user = await axios.get(
       config.pterodactyl.panel + "/api/application/users/" + decoded.id,
       {
         Headers: {

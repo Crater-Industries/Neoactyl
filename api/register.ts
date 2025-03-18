@@ -8,15 +8,22 @@ import { Op } from "sequelize";
 
 const router = Express.Router();
 
+// Load and parse config file
 const config = toml.parse(
   fs.readFileSync(process.cwd() + "/config.toml", "utf-8")
 );
+
+// Ensure config values exist
+if (!config.pterodactyl?.panel || !config.pterodactyl?.api) {
+  console.error("Pterodactyl panel URL or API key is missing in config.toml");
+  process.exit(1);
+}
 
 router.post("/api/register", async (req, res) => {
   const { username, email, firstname, lastname, password } = req.body;
 
   if (!email || !username || !password) {
-    return res.json({
+    return res.status(400).json({
       success: false,
       status: "failed",
       message: "All fields are required",
@@ -32,7 +39,7 @@ router.post("/api/register", async (req, res) => {
     });
 
     if (existingUser) {
-      return res.json({
+      return res.status(409).json({
         success: false,
         status: "failed",
         message: "User with that email or username already exists",
@@ -43,38 +50,54 @@ router.post("/api/register", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Post to Pterodactyl API
-    const response = await axios.post(
-      `${config.pterodactyl.panel}/api/application/users`,
-      {
-        email,
-        username,
-        first_name: firstname,
-        last_name: lastname,
-        password,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${config.pterodactyl.api}`,
-          "Content-Type": "application/json",
-          Accept: "application/json",
+    let pterodactylUser;
+    try {
+      const response = await axios.post(
+        `${config.pterodactyl.panel}/api/application/users`,
+        {
+          email,
+          username,
+          first_name: firstname,
+          last_name: lastname,
         },
+        {
+          headers: {
+            Authorization: `Bearer ${config.pterodactyl.api}`,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        }
+      );
+
+      if (!response.data || !response.data.attributes) {
+        throw new Error("Invalid response from Pterodactyl API");
       }
-    );
+
+      pterodactylUser = response.data.attributes;
+    } catch (error) {
+      console.error(
+        "Pterodactyl API error:",
+        error.response?.data || error.message
+      );
+      return res.status(500).json({
+        success: false,
+        status: "failed",
+        message: "Failed to create user in Pterodactyl",
+      });
+    }
 
     // Create user in the database
     const newUser = await User.create({
-      id: response.data.attributes.id, // Make sure this is correct based on Pterodactyl's API response
+      id: pterodactylUser.id, // Ensure this ID matches Pterodactyl's response
       username,
       email,
       password: hashedPassword,
     });
 
-    delete newUser.password; // Prevent sending the password in the response
-
-    return res.json({
+    return res.status(201).json({
       success: true,
       message: "User registered successfully",
-      user: newUser,
+      user: newUser.get({ plain: true }), // Convert Sequelize model to plain object
     });
   } catch (error) {
     console.error("Error during registration:", error);
