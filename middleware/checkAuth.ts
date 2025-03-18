@@ -14,7 +14,17 @@ const checkAuth = (req, res, next) => {
 
     // Verify token
     const decoded = jwt.verify(token, jwtSecret);
-    req.user = decoded; // Attach user data to request
+    const user = axios.post(
+      config.pterodactyl.panel + "/api/application/users/" + decoded.id,
+      {
+        Headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${config.pterodactyl.api}`,
+        },
+      }
+    );
+    req.user = user; // Attach user data to request
 
     next();
   } catch (error) {
