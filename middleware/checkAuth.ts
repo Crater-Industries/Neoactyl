@@ -4,7 +4,7 @@ import config from "../controller/config.ts"; // Import the config file
 
 const jwtSecret = config.general.jwtSecret;
 
-const checkAuth = (req, res, next) => {
+const checkAuth = async (req, res, next) => {
   try {
     // Get token from cookie
     const token = req.cookies?.authToken;
@@ -14,7 +14,7 @@ const checkAuth = (req, res, next) => {
 
     // Verify token
     const decoded = jwt.verify(token, jwtSecret);
-    const user = axios.post(
+    const user = await axios.post(
       config.pterodactyl.panel + "/api/application/users/" + decoded.id,
       {
         Headers: {
@@ -24,7 +24,7 @@ const checkAuth = (req, res, next) => {
         },
       }
     );
-    req.user = user; // Attach user data to request
+    req.user = user.attributes; // Attach user data to request
 
     next();
   } catch (error) {
