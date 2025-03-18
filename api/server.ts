@@ -3,6 +3,7 @@ import config from "../controller/config.ts";
 import axios from "axios";
 import checkAuth from "../middleware/checkAuth.ts";
 import Server from "../models/Server.ts";
+import { server } from "typescript";
 
 const router = express.Router();
 
@@ -71,6 +72,23 @@ router.get("/api/servers/", checkAuth, async (req, res) => {
     return res
       .status(500)
       .json({ success: false, message: "Internal Server Error" });
+  }
+});
+
+router.post("/api/update-server/:id", checkAuth, async (req, res) => {
+  const { ram, disk, cpu, databases, allocations } = req.body;
+  if (!req.params.id) {
+    return res
+      .status(404)
+      .json({ success: false, message: "server id not found" });
+  }
+  const server = Server.findOne({
+    where: {
+      id: req.params.id,
+    },
+  });
+  if (!server) {
+    res.status(403).json({ success: false, message: "server not fond!" });
   }
 });
 
