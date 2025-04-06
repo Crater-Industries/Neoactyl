@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Application Restarting</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f5f5f5;
+        color: #333;
+      }
+
+      .container {
+        text-align: center;
+        padding: 2rem;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        margin-top: 0;
+      }
+
+      .spinner {
+        margin: 2rem auto;
+        width: 50px;
+        height: 50px;
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+        border-left-color: #09f;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .status {
+        margin-top: 1rem;
+        font-style: italic;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Neoactyl dashboard is restarting</h1>
+      <div class="spinner"></div>
+      <p>Please wait while the application is restarting...</p>
+      <p class="status" id="statusText">Checking status...</p>
+    </div>
+
+    <script>
+      // Check application status every second
+      const statusText = document.getElementById("statusText");
+      let retryCount = 0;
+
+      function checkStatus() {
+        fetch("/status")
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "running") {
+              statusText.textContent =
+                "Application is back online! Redirecting...";
+              setTimeout(() => {
+                window.location.href = "/";
+              }, 1000);
+            } else if (data.status === "crashed") {
+              statusText.textContent =
+                "Application has crashed. Waiting for restart...";
+              retryCount++;
+            } else {
+              statusText.textContent = "Restarting application...";
+              retryCount = 0;
+            }
+          })
+          .catch((err) => {
+            statusText.textContent = "Connection error. Retrying...";
+            retryCount++;
+          })
+          .finally(() => {
+            setTimeout(checkStatus, 1000);
+          });
+      }
+
+      // Start checking status
+      checkStatus();
+    </script>
+  </body>
+</html>

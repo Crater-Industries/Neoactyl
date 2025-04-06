@@ -58,7 +58,7 @@ app.use(serverRoute);
 app.use(meRoute);
 app.use(googleAuthRoute);
 
-app.listen(config.domain.port, () => {
+app.listen(config.domain.port + 1, () => {
   console.clear();
   console.log("\x1b[36m%s\x1b[0m", ASCII_ART);
   console.log(
