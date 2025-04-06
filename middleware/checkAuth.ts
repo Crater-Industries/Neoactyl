@@ -11,7 +11,7 @@ const checkAuth = async (req, res, next) => {
     if (!token) {
       return res.status(401).json({ message: "Unauthorized" });
     }
-
+    console.log(req);
     // Verify token
     const decoded = jwt.verify(token, jwtSecret);
     const user = await axios.get(
@@ -28,6 +28,7 @@ const checkAuth = async (req, res, next) => {
 
     next();
   } catch (error) {
+    console.log(error);
     return res.status(401).json({ message: "Invalid or expired token" });
   }
 };
