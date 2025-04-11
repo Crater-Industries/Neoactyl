@@ -5,7 +5,7 @@
   "main": "start.cjs",
   "type": "module",
   "bin": {
-    "neoactyl": "./start.cjs",
+    "neoactyl": "./start.cjs"
   },
   "scripts": {
     "test": "nodemon .",

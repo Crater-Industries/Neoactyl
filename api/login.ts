@@ -62,6 +62,22 @@ router.post("/api/login", async (req, res) => {
 
     const ptrlUser = ptrlUserResponse.data.attributes;
 
+    const ip =
+      // Get from x-forwarded-for header (typical with proxies)
+      (typeof req.headers["x-forwarded-for"] === "string"
+        ? req.headers["x-forwarded-for"].split(",")[0].trim()
+        : Array.isArray(req.headers["x-forwarded-for"])
+        ? req.headers["x-forwarded-for"][0]
+        : undefined) ||
+      // Try other common headers
+      req.headers["x-real-ip"] ||
+      req.headers["x-client-ip"] ||
+      req.headers["cf-connecting-ip"] ||
+      // Fall back to socket
+      req.socket.remoteAddress;
+    user.lastLoggedInFrom = ip;
+    await user.save();
+
     // Generate token with environment secret key
     const token = jwt.sign(
       {

@@ -1,5 +1,13 @@
 import User from "../models/User";
 
+/**
+ * @name coinFlip
+ * @desc coinFlip gambling
+ * @param userId
+ * @param decision
+ * @param bet
+ */
+
 export default async function coinflip(
   userId: number,
   decision: number,

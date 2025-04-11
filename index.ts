@@ -25,7 +25,7 @@ import serverRoute from "./api/server.ts";
 import meRoute from "./api/meRoute.ts";
 import { ASCII_ART } from "./ascii.ts";
 import googleAuthRoute from "./api/google.ts";
-
+import coinFlipRoute from "./api/coinflip.ts";
 // app
 const app = Express();
 

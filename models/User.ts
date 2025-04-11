@@ -105,6 +105,14 @@ User.init(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    isSuspended: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    lastLoggedInFrom: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     googleId: {
       type: DataTypes.INTEGER,
       allowNull: true,

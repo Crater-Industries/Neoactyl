@@ -59,7 +59,7 @@ const checkAuth = async (req, res, next) => {
         }
       );
 
-      //const pterodactylUser = pterodactylResponse.data;
+      const pterodactylUser = pterodactylResponse.data;
 
       if (!pterodactylUser.attributes.admin) {
         return res.status(403).json({ success: false, error: "Not an admin" });

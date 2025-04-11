@@ -51,3 +51,14 @@ slots = 1
 # The renewal settings 
 enabled = true
 period = 7 # the period of renewal in days
+
+[store]
+# store resources and pricing
+# Resources name | Price
+ram = 100
+disk = 100
+cpu = 150
+allocation = 50
+database = 50
+backup = 80
+slots = 100
