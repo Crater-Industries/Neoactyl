@@ -17,6 +17,7 @@ interface UserAttributes {
   backups: number;
   slots: number;
   servers: number;
+  isSuspended: boolean;
   googleId: number | null;
 }
 

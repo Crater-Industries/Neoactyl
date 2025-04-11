@@ -48,6 +48,7 @@ backups = 1
 slots = 1
 
 [renewal]
+
 # The renewal settings 
 enabled = true
 period = 7 # the period of renewal in days

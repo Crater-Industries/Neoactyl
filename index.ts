@@ -26,6 +26,7 @@ import meRoute from "./api/meRoute.ts";
 import { ASCII_ART } from "./ascii.ts";
 import googleAuthRoute from "./api/google.ts";
 import coinFlipRoute from "./api/coinflip.ts";
+import userManagementRoute from "./api/admin/userManagement.ts";
 // app
 const app = Express();
 
@@ -57,6 +58,8 @@ app.use(nodeRoute);
 app.use(serverRoute);
 app.use(meRoute);
 app.use(googleAuthRoute);
+app.use(coinFlipRoute);
+app.use(userManagementRoute);
 
 app.listen(config.domain.port + 1, () => {
   console.clear();
